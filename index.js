@@ -2,7 +2,6 @@ const express = require("express") ;
 const mongoose = require("mongoose");
 const userRouter = require("./routes/users.js") ; 
 
-
 const port = 3002 ; 
 
 
@@ -24,4 +23,4 @@ app.get("/" , (req, res)=>{
 
 app.listen(port , ()=>{ 
     console.log("listenning on port " + port) ;
-})
+}) ; 

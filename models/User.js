@@ -1,5 +1,7 @@
 const mongoose = require("mongoose") ; 
-
+const jwt = require("jsonwebtoken") ; 
+const secretKey = "LOCASA..." ; 
+const expiresIn = "7d" ; 
 
 const UserSchema = new mongoose.Schema({
     firstName :{
@@ -39,6 +41,15 @@ const UserSchema = new mongoose.Schema({
         max : 50
     }
 }) ; 
+
+UserSchema.methods.generateAuthToken = function(){
+    const token = jwt.sign(
+        {_id : this._id ,
+        firstname : this.firstName ,
+        lastName : this.lastName,
+        email : this.email} , secretKey ,  {expiresIn}) ;
+    return token ; 
+}
 
 const userModel = mongoose.model("user" , UserSchema) ; 
 
