@@ -1,22 +1,23 @@
-const mongoose = require("mongoose") ; 
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const messageSchema = new mongoose.Schema({
-    sender :{
-        type : mongoose.Types.ObjectId ,
-        required : true , 
-    } ,
-    reciver :{
-        type : mongoose.Types.ObjectId ,
-        required : true , 
-    } ,
-    content : {
-        type: String , 
-        required : true ,
-        min : 2 , 
-        max : 100
-    }
+// Define the message schema
+const messageSchema = new Schema({
+  sender: { type: Schema.Types.ObjectId, ref: 'User' },
+  content: String,
+}, { _id: false });
+
+// Define the conversation thread schema
+const conversationSchema = new Schema({
+  participants: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  messages: [messageSchema],
+  lastupdated : {
+    type : Date ,
+    default : Date.now() 
+  }
 });
 
-const messageModel = mongoose.model("message" , messageSchema) ; 
+// Create the Conversation model
+const Conversation = mongoose.model('Conversation', conversationSchema);
 
-module.exports = messageModel ; 
+module.exports = Conversation;
