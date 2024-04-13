@@ -5,6 +5,10 @@ const Schema = mongoose.Schema;
 const messageSchema = new Schema({
   sender: { type: Schema.Types.ObjectId, ref: 'User' },
   content: String,
+  timeStamp : {
+    type : Date ,
+    default : Date.now() 
+  }
 }, { _id: false });
 
 // Define the conversation thread schema

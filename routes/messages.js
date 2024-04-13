@@ -60,13 +60,19 @@ router.post("/" ,auth , async (req,res)=>{
 router.get("/conv" , auth , async (req , res)=>{
 
     const token = req.get("x-auth-token") ; 
-    console.log(jwt.decode(token).firstName )
     const userId = jwt.decode(token)._id ;
     const participants = await Conversation.find({ participants: userId } , {participants : 1 , _id : 0}).sort({lastupdated : -1});
     const participantsName = await arrayTreatement(participants , userId) ; 
     res.json(participantsName) ; 
     
 });
+
+router.get("/msg" , auth , async(req, res)=>{
+    const token = req.get("x-auth-token") ; 
+    const userId = jwt.decode(token)._id ;
+    const messages = await Conversation.findOne({participants : [userId , req.body.user]} , {_id : 0 , participants : 0}) ; 
+    res.json(messages) ; 
+}) ; 
 
 async function arrayTreatement(arr , uid){
 
