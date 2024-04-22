@@ -58,7 +58,7 @@ router.post("/" ,auth , async (req,res)=>{
 } ) ; 
 
 router.get("/conv" , auth , async (req , res)=>{
-
+    console.log("conversations ...")
     const token = req.get("x-auth-token") ; 
     const userId = jwt.decode(token)._id ;
     const participants = await Conversation.find({ participants: userId } , {participants : 1 , _id : 0}).sort({lastupdated : -1});
@@ -67,10 +67,12 @@ router.get("/conv" , auth , async (req , res)=>{
     
 });
 
-router.get("/msg" , auth , async(req, res)=>{
+router.get("/msg/:uid" , auth , async(req, res)=>{
+    console.log("messages ...") ; 
     const token = req.get("x-auth-token") ; 
     const userId = jwt.decode(token)._id ;
-    const messages = await Conversation.findOne({participants : [userId , req.body.user]} , {_id : 0 , participants : 0}) ; 
+    const otherEnd = req.params.uid ; 
+    const messages = await Conversation.findOne({participants : [userId , otherEnd]} , {_id : 0 , participants : 0}) ; 
     res.json(messages) ; 
 }) ; 
 
@@ -87,8 +89,13 @@ async function arrayTreatement(arr , uid){
         }
     }
     for(let i = 0 ; i<newArr.length ; i++){
+        const dbuser = newArr[i]
         newArr[i] = await User.findById(newArr[i]) ; 
         newArr[i]= newArr[i].firstName+" "+newArr[i].lastName ; 
+        newArr[i] = {
+            id : dbuser ,
+            name :newArr[i]  
+        } ; 
         
     } ; 
     return newArr ; 
