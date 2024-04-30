@@ -37,11 +37,30 @@ router.get("/:id",async (req, res)=>{
     }
 } ) ; 
 
+
+
 router.get("/" , async(req,res)=>{
     let query = houseQuery(req) ; 
     let houses = await House.find(query , {image:0}) ; 
     res.send(houses) ;
-})
+}) ;
+
+router.put("/:id" ,auth , async(req, res)=>{
+  try{
+  const id = req.params.id; 
+  const updateData = req.body;
+  const updatedDocument = await House.findByIdAndUpdate(id, updateData, { new: true });
+  if (!updatedDocument) {
+    return res.status(404).json({ error: "Document not found" });
+  }
+
+    // Step 5: Send response
+    return res.status(200).json({ message: "Document updated successfully", data: updatedDocument });
+  }catch (error) {
+    console.error("Error updating document:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+} );
 
 function houseQuery(req){
     let query = {};
