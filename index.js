@@ -13,7 +13,8 @@ const port = 3002    ;
 
 const app= express() ;  
 //mongodb connection
-mongoose.connect("mongodb://127.0.0.1:27017/Locasa") 
+// mongodb://127.0.0.1:27017/Locasa
+mongoose.connect("mongodb+srv://oussamabh242:oussama.bh@cluster0.zhr236f.mongodb.net/LOCASA") 
     .then(()=>console.log("connected to mongodb")) 
     .catch(err => console.log(err)) ; 
 

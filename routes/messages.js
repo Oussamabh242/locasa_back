@@ -22,6 +22,7 @@ router.post("/" ,auth , async (req,res)=>{
         const token = req.get("x-auth-token") ; 
         const user1Id = jwt.decode(token)._id ;
         const user2Id = req.body.reciver ; 
+        console.log(user1Id , user2Id) ; 
         let cv = await Conversation.findOne({participants: { $all: [user1Id, user2Id] }}) ; 
         if(!cv){
             cv = new Conversation({
@@ -40,6 +41,7 @@ router.post("/" ,auth , async (req,res)=>{
         }
 
         cv = await cv.save() ; 
+        console.log(cv) ; 
         res.send(cv) ; 
         /*token = req.get("x-auth-token") ; 
         const sender = jwt.decode(token) ; 
@@ -72,7 +74,13 @@ router.get("/msg/:uid" , auth , async(req, res)=>{
     const token = req.get("x-auth-token") ; 
     const userId = jwt.decode(token)._id ;
     const otherEnd = req.params.uid ; 
-    const messages = await Conversation.findOne({participants : [userId , otherEnd]} , {_id : 0 , participants : 0}) ; 
+    console.log(otherEnd , userId);
+    const messages = await Conversation.findOne({
+        $or: [
+          { participants: [userId, otherEnd] },
+          { participants: [otherEnd, userId] }
+        ]
+      }, { _id: 0, participants: 0 });    
     res.json(messages) ; 
 }) ; 
 

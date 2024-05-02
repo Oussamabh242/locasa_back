@@ -2,6 +2,7 @@ const express = require("express") ;
 const bcrypt = require("bcrypt") ;
 const User = require("../models/User.js");
 const jwt = require("jsonwebtoken") ; 
+const auth = require("../middleware/auth.js") ; 
 
 // jwt params
 const secretKey = "LOCASA..." ; 
@@ -55,7 +56,7 @@ router.post("/auth" , async(req , res)=>{
 });
 
 // user infos
-router.get("/auth", async (req ,res)=>{
+router.get("/auth", auth , async (req ,res)=>{
     const token = req.get("x-auth-token") ;
     const payload = jwt.decode(token) ;
     res.send(payload) ; 
